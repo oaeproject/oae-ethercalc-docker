@@ -30,23 +30,18 @@ LABEL Email=oae@apereo.org
 #
 # Install ethercalc
 #
-ENV REDIS_HOST oae-redis
-ENV REDIS_PORT 6379
-
-# COPY entrypoint.sh /entrypoint.sh
-# RUN chmod +x /entrypoint.sh \
-#   && 
 RUN apk --no-cache add curl git su-exec \
     && addgroup -S -g 1001 ethercalc \
-    && adduser -S -u 1001 -G ethercalc -G node ethercalc \
-    && cd /opt \
-    && git clone https://github.com/oaeproject/ethercalc.git \
-    && node -v && npm -v \
-    && cd ethercalc && npm install --silent && npm install amqp
+    && adduser -S -u 1001 -G ethercalc -G node ethercalc
+    
+RUN cd /opt && git clone https://github.com/oaeproject/ethercalc.git
 
+WORKDIR /opt/ethercalc
+
+RUN cd /opt/ethercalc && npm install --silent 
+RUN cd /opt/ethercalc && npm install --silent amqp 
 RUN npm install --silent --global pm2
 
 USER ethercalc 
 EXPOSE 8000
-# ENTRYPOINT ["/entrypoint.sh"]
-CMD ["sh", "-c", "REDIS_HOST=$REDIS_HOST REDIS_PORT=$REDIS_PORT pm2 start /opt/ethercalc/app.js -- --cors && pm2 logs"]
+CMD ["sh", "-c", "REDIS_HOST=oae-redis REDIS_PORT=6379 pm2 start /opt/ethercalc/app.js -- --cors && pm2 logs"]
