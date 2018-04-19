@@ -1,6 +1,6 @@
 # Ethercalc docker image
 
-Fork repo of ethercalc for OAE.
+Docker image containing the fork repo of ethercalc for OAE.
 
 ## Usage
 
