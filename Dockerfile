@@ -1,5 +1,5 @@
 #
-# Copyright 2017 Apereo Foundation (AF) Licensed under the
+# Copyright 2018 Apereo Foundation (AF) Licensed under the
 # Educational Community License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may
 # obtain a copy of the License at
@@ -24,7 +24,7 @@
 
 FROM node:6.12.0-alpine
 LABEL Name=OAE-Ethercalc
-LABEL Author=ApereoFoundation 
+LABEL Author=ApereoFoundation
 LABEL Email=oae@apereo.org
 
 #
@@ -33,15 +33,14 @@ LABEL Email=oae@apereo.org
 RUN apk --no-cache add curl git su-exec \
     && addgroup -S -g 1001 ethercalc \
     && adduser -S -u 1001 -G ethercalc -G node ethercalc
-    
+
 RUN cd /opt && git clone https://github.com/oaeproject/ethercalc.git
 
 WORKDIR /opt/ethercalc
 
-RUN cd /opt/ethercalc && npm install --silent 
-RUN cd /opt/ethercalc && npm install --silent amqp 
+RUN cd /opt/ethercalc && npm install --silent
 RUN npm install --silent --global pm2
 
-USER ethercalc 
+USER ethercalc
 EXPOSE 8000
-CMD ["sh", "-c", "REDIS_HOST=oae-redis REDIS_PORT=6379 pm2 start /opt/ethercalc/app.js -- --cors && pm2 logs"]
+CMD ["sh", "-c", "REDIS_HOST=oae-redis REDIS_PORT=6379 RABBIT_HOST=oae-rabbitmq RABBIT_PORT=5672 RABBIT_EXCHANGE=oae-taskexchange pm2 start /opt/ethercalc/app.js -- --cors && pm2 logs"]
