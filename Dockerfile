@@ -43,4 +43,4 @@ RUN npm install --silent --global pm2
 
 USER ethercalc
 EXPOSE 8000
-CMD ["sh", "-c", "REDIS_HOST=oae-redis REDIS_PORT=6379 RABBIT_HOST=oae-rabbitmq RABBIT_PORT=5672 RABBIT_EXCHANGE=oae-taskexchange pm2 start /opt/ethercalc/app.js && pm2 logs"]
+CMD ["sh", "-c", "REDIS_HOST=oae-redis REDIS_PORT=6379 RABBIT_HOST=oae-rabbitmq RABBIT_PORT=5672 pm2 start /opt/ethercalc/app.js && pm2 logs"]
