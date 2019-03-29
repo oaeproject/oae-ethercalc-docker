@@ -22,7 +22,7 @@
 # $ docker run -it --name=ethercalc --net=host oae-ethercalc:latest
 #
 
-FROM node:6.12.0-alpine
+FROM  node:10-alpine
 LABEL Name=OAE-Ethercalc
 LABEL Author=ApereoFoundation
 LABEL Email=oae@apereo.org
@@ -43,7 +43,7 @@ RUN cd ${ETHERCALC_PATH} && npm install --silent
 RUN npm install --silent --global pm2
 
 RUN chown -R ethercalc:ethercalc ${ETHERCALC_PATH}
-USER ethercalc 
+USER ethercalc
 
 EXPOSE 8000
 CMD ["sh", "-c", "REDIS_HOST=oae-redis REDIS_PORT=6379 RABBIT_HOST=oae-rabbitmq RABBIT_PORT=5672 RABBIT_EXCHANGE=oae-taskexchange pm2 start /opt/ethercalc/app.js && pm2 logs"]
