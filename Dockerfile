@@ -27,23 +27,29 @@ LABEL Name=OAE-Ethercalc
 LABEL Author=ApereoFoundation
 LABEL Email=oae@apereo.org
 
-#
-# Install ethercalc
-#
 ENV ETHERCALC_PATH /opt/ethercalc
+ENV NODE_ENV production
+ENV REDIS_HOST oae-redis
+ENV REDIS_PORT 6379
+ENV RABBIT_HOST oae-rabbitmq
+ENV RABBIT_PORT 5672
+ENV RABBIT_EXCHANGE oae-taskexchange
 
+# Create ethercalc user
 RUN apk --no-cache add curl git su-exec \
     && addgroup -S -g 1001 ethercalc \
     && adduser -S -u 1001 -G ethercalc -G node ethercalc
 
+# Install ethercalc
 RUN cd /opt && git clone https://github.com/oaeproject/ethercalc.git
 
 WORKDIR ${ETHERCALC_PATH}
 RUN cd ${ETHERCALC_PATH} && npm install --silent
-RUN npm install --silent --global pm2
+RUN npm install --global pm2
 
 RUN chown -R ethercalc:ethercalc ${ETHERCALC_PATH}
 USER ethercalc
-
 EXPOSE 8000
-CMD ["sh", "-c", "REDIS_HOST=oae-redis REDIS_PORT=6379 RABBIT_HOST=oae-rabbitmq RABBIT_PORT=5672 RABBIT_EXCHANGE=oae-taskexchange pm2 start /opt/ethercalc/app.js && pm2 logs"]
+
+
+CMD ["sh", "-c", "pm2 start /opt/ethercalc/app.js && pm2 logs"]
