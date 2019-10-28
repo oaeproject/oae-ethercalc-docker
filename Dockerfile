@@ -31,9 +31,6 @@ ENV ETHERCALC_PATH /opt/ethercalc
 ENV NODE_ENV production
 ENV REDIS_HOST oae-redis
 ENV REDIS_PORT 6379
-ENV RABBIT_HOST oae-rabbitmq
-ENV RABBIT_PORT 5672
-ENV RABBIT_EXCHANGE oae-taskexchange
 
 # Create ethercalc user
 RUN apk --no-cache add curl git su-exec \
