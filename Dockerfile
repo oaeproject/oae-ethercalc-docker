@@ -38,15 +38,15 @@ RUN apk --no-cache add curl git su-exec \
     && adduser -S -u 1001 -G ethercalc -G node ethercalc
 
 # Install ethercalc
-RUN cd /opt && git clone https://github.com/oaeproject/ethercalc.git
+RUN git clone https://github.com/oaeproject/ethercalc.git ${ETHERCALC_PATH}
 
 WORKDIR ${ETHERCALC_PATH}
-RUN cd ${ETHERCALC_PATH} && npm install --silent
+RUN npm install --silent
 RUN npm install --global pm2
 
-RUN chown -R ethercalc:ethercalc ${ETHERCALC_PATH}
+RUN chown -R ethercalc:ethercalc .
 USER ethercalc
 EXPOSE 8000
 
 
-CMD ["sh", "-c", "pm2 start /opt/ethercalc/app.js && pm2 logs"]
+CMD ["sh", "-c", "pm2 start --restart-delay=3000 /opt/ethercalc/app.js && pm2 logs"]
