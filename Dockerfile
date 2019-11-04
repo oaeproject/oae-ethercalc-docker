@@ -49,4 +49,4 @@ USER ethercalc
 EXPOSE 8000
 
 
-CMD ["sh", "-c", "pm2 start /opt/ethercalc/app.js && pm2 logs"]
+CMD ["sh", "-c", "pm2 start --restart-delay=3000 /opt/ethercalc/app.js && pm2 logs"]
